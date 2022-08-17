@@ -1,0 +1,22 @@
+service: kinesis
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+functions:
+  createOrder:
+    handler: handler.createOrder
+    events: 
+      - http:  
+          path: /order
+          method: post
+
+resources:
+  Resources:
+    orderEventsStream:
+      Type: AWS::Kinesis::Stream
+      Properties:
+        Name: order-events
+        ShardCount: 1
