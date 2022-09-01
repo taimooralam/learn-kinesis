@@ -8,5 +8,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "serverless-pseudo-parameters": "^2.6.1",
+    "uuid": "^8.3.2"
+  }
 }

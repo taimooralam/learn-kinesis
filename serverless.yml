@@ -1,9 +1,26 @@
 service: kinesis
 frameworkVersion: '3'
 
+plugins:
+  - serverless-pseudo-parameters
+
 provider:
   name: aws
   runtime: nodejs12.x
+  
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:GetItem
+      Resource:
+        - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/ordersTable
+    - Effect: Allow
+      Action:
+        - kinesis:PutRecord
+      Resource:
+        - arn:aws:kinesis:#{AWS::Region}:#{AWS::AccountId}:stream/order-events
+
 
 functions:
   createOrder:
@@ -12,6 +29,9 @@ functions:
       - http:  
           path: /order
           method: post
+    environments:
+      orderTableName: ordersTable
+      orderStreamName: order-events
 
 resources:
   Resources:
@@ -20,3 +40,14 @@ resources:
       Properties:
         Name: order-events
         ShardCount: 1
+    orderTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ordersTable
+        AttributeDefinitions:
+          - AttributeName: "orderId"
+          - AttributeType: "S"
+        KeySchema:
+          - AttributeName: "orderId"
+            KeyType: "HASH"
+        BillingMode: PAY_PER_REQUEST
