@@ -8,7 +8,7 @@ const kinesis = new AWS.Kinesis();
 const TABLE_NAME = process.env.orderTableName;
 const STREAM_NAME = process.env.orderStreamName;
 
-module.export.createOrder = body => {
+module.exports.createOrder = body => {
     const order = {
         orderId: uuidv1(),
         name: body.name,
@@ -22,7 +22,7 @@ module.export.createOrder = body => {
     return order;
 };
 
-module.export.placeNewOrder = order => {
+module.exports.placeNewOrder = order => {
     // save the order in the dynamoDB database
     saveNewOrder(order).then(() => {
         // what to put here
