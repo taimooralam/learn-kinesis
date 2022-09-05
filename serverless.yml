@@ -29,7 +29,7 @@ functions:
       - http:  
           path: /order
           method: post
-    environments:
+    environment:
       orderTableName: ordersTable
       orderStreamName: order-events
 
