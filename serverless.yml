@@ -7,7 +7,7 @@ plugins:
 provider:
   name: aws
   runtime: nodejs12.x
-  
+
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -25,8 +25,8 @@ provider:
 functions:
   createOrder:
     handler: handler.createOrder
-    events: 
-      - http:  
+    events:
+      - http:
           path: /order
           method: post
     environment:
@@ -46,7 +46,7 @@ resources:
         TableName: ordersTable
         AttributeDefinitions:
           - AttributeName: "orderId"
-          - AttributeType: "S"
+            AttributeType: "S"
         KeySchema:
           - AttributeName: "orderId"
             KeyType: "HASH"
