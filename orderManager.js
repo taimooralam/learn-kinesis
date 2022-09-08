@@ -24,18 +24,57 @@ module.exports.createOrder = body => {
 
 module.exports.placeNewOrder = order => {
     // save the order in the dynamoDB database
-    saveNewOrder(order).then(() => {
-        // what to put here
+    saveOrder(order).then(() => {
+        return placeOrderStream(order);
     });
-    // put the order in the kinesis stream
 };
 
-function saveNewOrder(order) {
+module.exports.fullfilOrder = (orderId, fulfillmentId) => {
+    return getOrder(orderId).then((savedOrder) => {
+        const order = createFulfilledOrder(savedOrder, fulfillmentId);
+        return saveOrder(order).then(() => {
+            return placeOrderStream(order);
+        });
+    });
+};
+
+function saveOrder(order) {
     const params = {
         TableName: TABLE_NAME,
         Item: order
     };
 
     return dynamo.put(params).promise();
+}
+
+function getOrder(orderId) {
+    const params = {
+        Key: {
+            orderId: orderId, 
+        },
+        TableName: TABLE_NAME,
+    };
+
+    return dynamo.get(params).promise().then((result) => {
+        return result.Item;
+    });
+}
+
+function createFulfilledOrder(savedOrder, fulfillmentId) {
+    savedOrder.fulfillmentId = fulfillmentId;
+    savedOrder.fulfillmentDate = Date.now();
+    savedOrder.eventType = 'order_fulfilled';
+
+    return savedOrder;
+}
+
+function placeOrderStream(order) {
+    const params = {
+        Data: JSON.stringify(order),
+        PartitionKey: order.orderId,
+        StreamName: STREAM_NAME,
+    };
+
+    return kinesis.putRecord(params).promise(); 
 }
 
