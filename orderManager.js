@@ -1,6 +1,7 @@
 'use strict'
 
-const uuidv1 = require('uuid/v1');
+// const uuidv1 = require('uuid/v1');
+const { v4: uuidv1 } = require('uuid');
 const AWS = require('aws-sdk');
 const dymano = new AWS.DynamoDB.DocumentClient();
 const kinesis = new AWS.Kinesis();
