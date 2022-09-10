@@ -30,7 +30,7 @@ module.exports.placeNewOrder = order => {
     });
 };
 
-module.exports.fullfilOrder = (orderId, fulfillmentId) => {
+module.exports.fulfillOrder = (orderId, fulfillmentId) => {
     return getOrder(orderId).then((savedOrder) => {
         const order = createFulfilledOrder(savedOrder, fulfillmentId);
         return saveOrder(order).then(() => {
