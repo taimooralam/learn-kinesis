@@ -14,6 +14,7 @@ function createResponse(stausCode, message) {
 module.exports.createOrder = async (event) => {
 
   // getting the order
+  console.log("***", typeof event, event);
   const body = JSON.parse(event.body);
   const order = orderManager.createOrder(body);
 

@@ -25,7 +25,7 @@ module.exports.createOrder = body => {
 
 module.exports.placeNewOrder = order => {
     // save the order in the dynamoDB database
-    saveOrder(order).then(() => {
+    return saveOrder(order).then(() => {
         return placeOrderStream(order);
     });
 };
