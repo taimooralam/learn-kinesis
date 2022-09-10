@@ -2,7 +2,7 @@
 
 const orderManager = require('./orderManager');
 
-function createResponse(stausCode, message) {
+function createResponse(statusCode, message) {
   const response = {
     statusCode: statusCode,
     body: JSON.stringify(message), 
