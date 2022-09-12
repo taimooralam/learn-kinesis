@@ -6,3 +6,9 @@ jspm_packages
 
 # Serverless directories
 .serverless
+
+# package directories
+jspm_packages
+
+# esbuild directories
+.esbuild
