@@ -41,6 +41,11 @@ functions:
     environment:
       orderTableName: ordersTable
       orderStreamName: order-events
+  notifyCakeProducer:
+    handler: handler.notifyCakeProducer
+    events:
+      - stream
+        arn: arn:aws:kinesis:#{AWS::Region}:#{AWS::AccountId}:stream/order-events
 
       
 
