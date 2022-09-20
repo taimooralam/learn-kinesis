@@ -1,6 +1,5 @@
 service: kinesis
 frameworkVersion: '3'
-
 plugins:
   - serverless-pseudo-parameters
 
@@ -30,8 +29,6 @@ provider:
           ses:FromAddress:
             - cakeorderingsystem@grr.la
 
-
-
 functions:
   createOrder:
     handler: handler.createOrder
@@ -54,14 +51,12 @@ functions:
   notifyCakeProducer:
     handler: handler.notifyCakeProducer
     events:
-      - stream
-        arn: arn:aws:kinesis:#{AWS::Region}:#{AWS::AccountId}:stream/order-events
+      - stream:
+          arn: arn:aws:kinesis:#{AWS::Region}:#{AWS::AccountId}:stream/order-events
     environment:
       region: ${self:provider.region}
-      cakeProducerEmail: cakeProducer@grr.la
+      cakeProducerEmail: cakeproducer@grr.la
       orderingSystemEmail: cakeorderingsystem@grr.la
-
-      
 
 resources:
   Resources:

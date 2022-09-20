@@ -1,43 +1,44 @@
-'use strict';
+'use strict'
 
 const AWS = require('aws-sdk');
-const SES = new AWS.SES({
-    region: process.env.region, 
+const ses = new AWS.SES({
+    region: process.env.region
 });
 
 const CAKE_PRODUCER_EMAIL = process.env.cakeProducerEmail;
 const ORDERING_SYSTEM_EMAIL = process.env.orderingSystemEmail;
 
 module.exports.handlePlacedOrders = ordersPlaced => {
-     var ordersPlacedPromises = [];
+    var ordersPlacedPromises = [];
 
-     for (let order of ordersPlaced) {
+    for (let order of ordersPlaced) {
         const temp = notifyCakeProducerByEmail(order);
-        orderPlacedPromises.push(order);
-     }
+        
+        ordersPlacedPromises.push(temp);
+    }
 
-     return Promise.all(ordersPlacedPromises);
-};
+    return Promise.all(ordersPlacedPromises);
+}
 
 function notifyCakeProducerByEmail(order) {
     const params = {
-         Destination: {
+        Destination: {
             ToAddresses: [CAKE_PRODUCER_EMAIL]
-         },
-         Message: {
+        },
+        Message: {
             Body: {
                 Text: {
-                    Data: JSON.stringify(order),
+                    Data: JSON.stringify(order)
                 }
             },
             Subject: {
-                Data: 'New cake order',
-            },
-            Source: ORDERING_SYSTEM_EMAIL,
-         },
+                Data: 'New cake order'
+            }
+        },
+        Source: ORDERING_SYSTEM_EMAIL
     };
 
-    return SES.sendEmail(params).promise().then((data) => {
+    return ses.sendEmail(params).promise().then((data) => {
         return data;
     });
 }

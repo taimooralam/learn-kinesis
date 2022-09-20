@@ -18,47 +18,57 @@ module.exports.createOrder = body => {
         quantity: body.quantity,
         orderDate: Date.now(),
         eventType: 'order_placed'
-    };
+    }
 
     return order;
-};
+}
 
 module.exports.placeNewOrder = order => {
-    // save the order in the dynamoDB database
     return saveOrder(order).then(() => {
-        return placeOrderStream(order);
-    });
-};
+        return placeOrderStream(order)
+    })
+}
 
 module.exports.fulfillOrder = (orderId, fulfillmentId) => {
-    return getOrder(orderId).then((savedOrder) => {
+
+    return getOrder(orderId).then(savedOrder => {
         const order = createFulfilledOrder(savedOrder, fulfillmentId);
         return saveOrder(order).then(() => {
-            return placeOrderStream(order);
+           return placeOrderStream(order) 
         });
     });
-};
+}
 
 function saveOrder(order) {
     const params = {
         TableName: TABLE_NAME,
         Item: order
-    };
+    }
 
-    return dynamo.put(params).promise();
+    return dynamo.put(params).promise()
+}
+
+function placeOrderStream(order) {
+    const params = {
+        Data: JSON.stringify(order),
+        PartitionKey: order.orderId,
+        StreamName: STREAM_NAME
+    }
+
+    return kinesis.putRecord(params).promise();
 }
 
 function getOrder(orderId) {
     const params = {
         Key: {
-            orderId: orderId, 
+            orderId: orderId
         },
-        TableName: TABLE_NAME,
+        TableName: TABLE_NAME
     };
 
-    return dynamo.get(params).promise().then((result) => {
+    return dynamo.get(params).promise().then(result => {
         return result.Item;
-    });
+    })
 }
 
 function createFulfilledOrder(savedOrder, fulfillmentId) {
@@ -68,14 +78,3 @@ function createFulfilledOrder(savedOrder, fulfillmentId) {
 
     return savedOrder;
 }
-
-function placeOrderStream(order) {
-    const params = {
-        Data: JSON.stringify(order),
-        PartitionKey: order.orderId,
-        StreamName: STREAM_NAME,
-    };
-
-    return kinesis.putRecord(params).promise(); 
-}
-
