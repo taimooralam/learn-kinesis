@@ -21,7 +21,6 @@ module.exports.handlePlacedOrders = ordersPlaced => {
 }
 
 function notifyCakeProducerByEmail(order) {
-    console.log('***', 'about to notify about', order, CAKE_PRODUCER_EMAIL);
     const params = {
         Destination: {
             ToAddresses: [CAKE_PRODUCER_EMAIL]
@@ -40,10 +39,9 @@ function notifyCakeProducerByEmail(order) {
     };
 
     return ses.sendEmail(params).promise().then((data) => {
-        console.log('***', 'notification email sent data', data);
         return data;
     }).catch((error) => {
-        console.log('***', 'error while sending email data', error);
+        console.error('error while sending email data', error);
         return error;
     });
 }

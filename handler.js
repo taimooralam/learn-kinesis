@@ -48,7 +48,6 @@ module.exports.notifyCakeProducer = async (event) => {
 
   try {
     await cakeProducerManager.handlePlacedOrders(ordersPlaced);
-    console.log('***', 'notificationb sent', ordersPlaced);
     return 'everything went well';  
   } catch (error) {
     return error;
