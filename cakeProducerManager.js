@@ -43,7 +43,7 @@ function notifyCakeProducerByEmail(order) {
         console.log('***', 'notification email sent data', data);
         return data;
     }).catch((error) => {
-        console.log('***', 'error while sending email data', data);
+        console.log('***', 'error while sending email data', error);
         return error;
     });
 }

@@ -1,3 +1,5 @@
+org: talam
+app: kinesis
 service: kinesis
 frameworkVersion: '3'
 plugins:
