@@ -54,7 +54,7 @@ functions:
       - stream:
           arn: arn:aws:kinesis:#{AWS::Region}:#{AWS::AccountId}:stream/order-events
     environment:
-      region: ${self:provider.region}
+      region: ${aws:region}
       cakeProducerEmail: cakeproducer@grr.la
       orderingSystemEmail: cakeorderingsystem@grr.la
 
