@@ -21,6 +21,7 @@ module.exports.handlePlacedOrders = ordersPlaced => {
 }
 
 function notifyCakeProducerByEmail(order) {
+    console.log('***', 'about to notify about', order);
     const params = {
         Destination: {
             ToAddresses: [CAKE_PRODUCER_EMAIL]
@@ -39,6 +40,7 @@ function notifyCakeProducerByEmail(order) {
     };
 
     return ses.sendEmail(params).promise().then((data) => {
+        console.log('***', 'notification email sent data', data);
         return data;
     });
 }
